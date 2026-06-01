@@ -1,0 +1,22 @@
+FROM nvidia/cuda:12.4.1-cudnn-devel-ubuntu22.04
+
+ENV DEBIAN_FRONTEND=noninteractive \
+    PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    python3.11 python3.11-venv python3-pip git build-essential curl \
+ && rm -rf /var/lib/apt/lists/*
+
+RUN ln -sf /usr/bin/python3.11 /usr/bin/python
+
+WORKDIR /workspace
+COPY requirements.txt ./
+RUN python -m pip install --upgrade pip wheel setuptools \
+ && pip install -r requirements.txt
+
+COPY . .
+RUN pip install -e .
+
+CMD ["python", "-m", "slonik.training.sft", "--config", "configs/sft_qlora.yaml"]

@@ -1,0 +1,147 @@
+# =============================================================================
+# Slonik-7B requirements
+# =============================================================================
+# Install order:
+#   1. PyTorch first (Blackwell needs cu128 build, NOT the PyPI default):
+#        uv pip install --upgrade "torch>=2.11" torchvision torchaudio \
+#          --index-url https://download.pytorch.org/whl/cu128
+#
+#   2. Then this file:
+#        uv pip install -r requirements.txt
+#
+#   3. vLLM separately (release wheels currently target cu13, so let uv resolve):
+#        uv pip install vllm --torch-backend=cu128
+#
+# Note: --extra-index-url below works with `pip` but `uv pip` requires
+# --index-url to be the primary; uv users should install torch step 1
+# explicitly with --index-url then this file becomes pure PyPI.
+# =============================================================================
+
+--extra-index-url https://download.pytorch.org/whl/cu128
+
+
+# -----------------------------------------------------------------------------
+# PyTorch (Blackwell sm_120 — requires cu128 build)
+# -----------------------------------------------------------------------------
+torch>=2.11.0
+torchvision>=0.22.0
+torchaudio>=2.11.0
+
+
+# -----------------------------------------------------------------------------
+# Core training stack
+# -----------------------------------------------------------------------------
+transformers>=4.46.0,<5.0.0
+accelerate>=1.1.0
+trl>=0.15.0
+peft>=0.14.0
+bitsandbytes>=0.45.0
+unsloth>=2025.7.0
+unsloth_zoo>=2025.7.0
+xformers>=0.0.28
+
+# flash-attn — DISABLED.
+# Building from source needs CUDA toolkit; prebuilt wheels for sm_120 are
+# unreliable. Unsloth ships Triton kernels as a working fallback.
+# Uncomment only if you have nvcc + flash-attn 3.x available:
+# flash-attn>=3.0.0
+
+
+# -----------------------------------------------------------------------------
+# Hugging Face data + model utilities
+# -----------------------------------------------------------------------------
+datasets>=3.0.0
+huggingface_hub>=0.27.0
+safetensors>=0.4.5
+sentencepiece>=0.2.0
+tokenizers>=0.20.0
+einops>=0.8.0
+
+
+# -----------------------------------------------------------------------------
+# vLLM (serving + optional GRPO fast_inference)
+# As of 2026-05, vLLM release wheels target CUDA 13. Inside Unsloth this
+# triggers an import-time fail. Two workarounds:
+#   (a) Install via `uv pip install vllm --torch-backend=cu128` and set
+#       fast_inference: false in configs/grpo.yaml
+#   (b) Skip vllm entirely (GRPO still works, ~2x slower generation)
+# Standalone `vllm serve` (separate process, post-training) works regardless.
+# -----------------------------------------------------------------------------
+vllm>=0.20.0
+
+
+# -----------------------------------------------------------------------------
+# SQL parsing, validation, execution (Slonik-specific)
+# -----------------------------------------------------------------------------
+sqlglot>=26.0.0
+sqlparse>=0.5.0
+pglast>=6.0.0
+psycopg[binary,pool]>=3.2.0
+duckdb>=1.1.0
+sqlalchemy>=2.0.0
+
+
+# -----------------------------------------------------------------------------
+# FastAPI serving layer
+# -----------------------------------------------------------------------------
+fastapi>=0.115.0
+uvicorn[standard]>=0.32.0
+pydantic>=2.10.0
+pydantic-settings>=2.6.0
+sse-starlette>=2.1.0
+
+
+# -----------------------------------------------------------------------------
+# Experiment tracking + observability
+# -----------------------------------------------------------------------------
+wandb>=0.18.0
+langfuse>=2.55.0
+
+
+# -----------------------------------------------------------------------------
+# Data analysis + Streamlit demo
+# -----------------------------------------------------------------------------
+pandas>=2.2.0
+numpy>=2.0.0,<3.0.0
+pyarrow>=18.0.0
+streamlit>=1.40.0
+plotly>=5.24.0
+
+
+# -----------------------------------------------------------------------------
+# Synthesis API client
+# (Anthropic SDK works against DeepSeek's Anthropic-compatible endpoint —
+#  set ANTHROPIC_BASE_URL=https://api.deepseek.com/anthropic in .env)
+# -----------------------------------------------------------------------------
+anthropic>=0.39.0
+
+
+# -----------------------------------------------------------------------------
+# CLI utilities, retries, env loading
+# -----------------------------------------------------------------------------
+click>=8.1.0
+rich>=13.9.0
+tqdm>=4.67.0
+pyyaml>=6.0.0
+httpx>=0.28.0
+tenacity>=9.0.0
+loguru>=0.7.0
+python-dotenv>=1.0.0
+
+
+# -----------------------------------------------------------------------------
+# Notebooks (results analysis, plotting from W&B)
+# -----------------------------------------------------------------------------
+ipykernel>=6.29.0
+jupyter>=1.1.0
+
+
+# -----------------------------------------------------------------------------
+# Dev & test
+# -----------------------------------------------------------------------------
+pytest>=8.3.0
+pytest-asyncio>=0.24.0
+pytest-cov>=6.0.0
+ruff>=0.8.0
+mypy>=1.13.0
+pre-commit>=4.0.0

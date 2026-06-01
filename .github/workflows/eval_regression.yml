@@ -1,0 +1,39 @@
+name: eval-regression
+
+on:
+  workflow_dispatch:
+    inputs:
+      model_repo:
+        description: "HF repo to evaluate"
+        required: true
+        default: "phaneendra/Slonik-7B"
+
+jobs:
+  bird-mini-dev:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install eval deps
+        run: |
+          pip install datasets sqlglot httpx click rich tqdm loguru \
+                      pyyaml huggingface_hub psycopg[binary]
+          pip install -e . --no-deps
+
+      - name: Run eval against served model
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          python -m slonik.eval.bird_runner \
+            --server ${{ secrets.SLONIK_SERVER_URL }} \
+            --model "${{ inputs.model_repo }}" \
+            --out outputs/bird_eval.json \
+            --limit 100
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: eval-results
+          path: outputs/

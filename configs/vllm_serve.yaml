@@ -1,0 +1,26 @@
+model:
+  path: checkpoints/sft-merged
+  served_name: slonik-7b
+  dtype: bfloat16
+  max_model_len: 8192
+  gpu_memory_utilization: 0.85
+  enforce_eager: false
+  trust_remote_code: true
+
+server:
+  host: 0.0.0.0
+  port: 8000
+  api_key: null
+  disable_log_requests: false
+
+sampling:
+  temperature: 0.0
+  top_p: 1.0
+  max_tokens: 512
+  stop:
+    - "###"
+    - "<|im_end|>"
+
+quantization:
+  enabled: false
+  method: awq

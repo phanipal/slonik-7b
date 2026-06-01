@@ -1,0 +1,57 @@
+model:
+  base: Qwen/Qwen2.5-Coder-7B-Instruct
+  max_seq_length: 1024
+  load_in_4bit: true
+  dtype: bfloat16
+  trust_remote_code: true
+lora:
+  r: 32
+  alpha: 64
+  dropout: 0.0
+  bias: none
+  target_modules:
+  - q_proj
+  - k_proj
+  - v_proj
+  - o_proj
+  - gate_proj
+  - up_proj
+  - down_proj
+  use_gradient_checkpointing: unsloth
+  random_state: 3407
+data:
+  train_path: data/processed/train.jsonl
+  eval_path: data/processed/eval.jsonl
+  text_field: text
+  num_proc: 4
+  packing: false
+  train_on_responses_only: true
+training:
+  output_dir: checkpoints/sft
+  num_train_epochs: 3
+  per_device_train_batch_size: 2
+  gradient_accumulation_steps: 8
+  per_device_eval_batch_size: 2
+  learning_rate: 1.0e-05
+  warmup_ratio: 0.1
+  weight_decay: 0.01
+  lr_scheduler_type: cosine
+  optim: adamw_torch_fused
+  logging_steps: 5
+  eval_strategy: steps
+  eval_steps: 200
+  save_strategy: steps
+  save_steps: 200
+  save_total_limit: 3
+  load_best_model_at_end: true
+  metric_for_best_model: eval_loss
+  greater_is_better: false
+  bf16: true
+  fp16: false
+  seed: 3407
+  report_to: wandb
+  run_name: slonik-7b-sft-r32
+  max_grad_norm: 0.5
+merge:
+  output_dir: checkpoints/sft-merged
+  save_method: merged_16bit

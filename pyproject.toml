@@ -1,0 +1,47 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "slonik"
+version = "0.1.0"
+description = "PostgreSQL text-to-SQL model fine-tuned from Qwen2.5-Coder-7B with QLoRA + GRPO"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "Apache-2.0" }
+authors = [{ name = "Phanendra Paladugu" }]
+classifiers = [
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "License :: OSI Approved :: Apache Software License",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+
+[project.scripts]
+slonik-sft = "slonik.training.sft:main"
+slonik-grpo = "slonik.training.grpo:main"
+slonik-eval = "slonik.eval.bird_runner:main"
+slonik-serve = "slonik.serve.api:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 110
+target-version = "py311"
+extend-exclude = ["notebooks", "data", "checkpoints", "outputs"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "SIM", "RET", "PL"]
+ignore = ["PLR0913", "PLR2004", "E501"]
+
+[tool.mypy]
+python_version = "3.11"
+ignore_missing_imports = true
+disallow_untyped_defs = false
+warn_unused_ignores = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra -q --strict-markers"
+filterwarnings = ["ignore::DeprecationWarning"]

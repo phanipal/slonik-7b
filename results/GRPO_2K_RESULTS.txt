@@ -1,0 +1,43 @@
+════════════════════════════════════════
+  SLONIK-7B-GRPO (2000 steps) — RESULTS
+  Completed: Mon Jun  1 00:32:51 CDT 2026
+════════════════════════════════════════
+
+▸ BIRD Mini-Dev PostgreSQL:
+=== BIRD-PG MINI-DEV RESULTS ===
+2026-06-01 00:12:08.971 | INFO     | __main__:main:292 -   Total examples:    500
+2026-06-01 00:12:08.971 | INFO     | __main__:main:293 -   Eligible (gold OK): 500
+2026-06-01 00:12:08.971 | INFO     | __main__:main:294 -   CORRECT:           191  (38.2%)  ← headline accuracy
+2026-06-01 00:12:08.972 | INFO     | __main__:main:295 -   WRONG:             159
+2026-06-01 00:12:08.972 | INFO     | __main__:main:296 -   EXEC ERROR:        150
+2026-06-01 00:12:08.972 | INFO     | __main__:main:297 -   GOLD ERROR:          0
+2026-06-01 00:12:08.972 | INFO     | __main__:main:298 -   NO SCHEMA:           0
+2026-06-01 00:12:08.973 | INFO     | __main__:main:299 - 
+2026-06-01 00:12:08.973 | INFO     | __main__:main:300 -   By difficulty:
+2026-06-01 00:12:08.973 | INFO     | __main__:main:305 -     simple      :  83/148  (56.1%)
+2026-06-01 00:12:08.974 | INFO     | __main__:main:305 -     moderate    :  84/250  (33.6%)
+2026-06-01 00:12:08.974 | INFO     | __main__:main:305 -     challenging :  24/102  (23.5%)
+2026-06-01 00:12:08.974 | INFO     | __main__:main:306 - 
+2026-06-01 00:12:08.974 | INFO     | __main__:main:307 -   Elapsed:   16.6 min
+2026-06-01 00:12:08.974 | INFO     | __main__:main:308 -   Output:    outputs/bird_pg_results_grpo2k.jsonl
+2026-06-01 00:12:08.974 | INFO     | __main__:main:309 - 
+2026-06-01 00:12:08.975 | INFO     | __main__:main:310 -   COMPARISON (BIRD Mini-Dev PG, from BIRD docs):
+2026-06-01 00:12:08.975 | INFO     | __main__:main:311 -     Qwen2.5-Coder-7B (base):     12.22%
+2026-06-01 00:12:08.975 | INFO     | __main__:main:312 -     Codestral 22B:               21.11%
+2026-06-01 00:12:08.975 | INFO     | __main__:main:313 -     Qwen2.5-Coder-32B:           22.96%
+
+▸ BIRD Mini-Dev SQLite:
+=== BIRD-SQLITE RESULTS ===
+2026-06-01 00:32:49.970 | INFO     | __main__:main:110 -   CORRECT: 226 (45.2%)
+2026-06-01 00:32:49.970 | INFO     | __main__:main:111 -   WRONG:   229
+2026-06-01 00:32:49.970 | INFO     | __main__:main:112 -   ERROR:   45
+2026-06-01 00:32:49.970 | INFO     | __main__:main:113 -   By difficulty:
+2026-06-01 00:32:49.970 | INFO     | __main__:main:117 -     simple      : 98/148 (66.2%)
+2026-06-01 00:32:49.970 | INFO     | __main__:main:117 -     moderate    : 95/250 (38.0%)
+2026-06-01 00:32:49.971 | INFO     | __main__:main:117 -     challenging : 33/102 (32.4%)
+2026-06-01 00:32:49.971 | INFO     | __main__:main:118 - 
+  PG comparison: Slonik-PG=34.60%, Slonik-SQLite=45.20%
+
+▸ COMPARISON vs 500-step run:
+    500 steps  → PG 34.60%, SQLite 42.40%
+    2000 steps → PG <see above>, SQLite <see above>

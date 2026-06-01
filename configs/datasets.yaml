@@ -1,0 +1,38 @@
+bird:
+  train_id: birdsql/bird23-train-filtered
+  dev_id: birdsql/bird_mini_dev
+  dev_config: postgresql
+  databases_url: https://bird-bench.oss-cn-beijing.aliyuncs.com/MINIDEV_postgresql.zip
+  train_databases_url: https://bird-bench.oss-cn-beijing.aliyuncs.com/train.zip
+
+spider:
+  id: xlangai/spider
+  splits:
+    - train
+    - validation
+
+gretel:
+  id: gretelai/synthetic_text_to_sql
+  pg_keywords:
+    - postgres
+    - postgresql
+    - jsonb
+    - cte
+    - window function
+
+bird_critic_pg:
+  id: birdsql/bird-critic-1.0-pg
+  use_for: held_out_eval
+
+pg_modern:
+  output_train: data/synthetic/pg_modern_train.jsonl
+  output_eval: data/synthetic/pg_modern_eval.jsonl
+  n_train: 2000
+  n_eval: 500
+  feature_mix:
+    cte: 0.20
+    window: 0.20
+    jsonb: 0.20
+    pgvector: 0.15
+    fulltext: 0.15
+    array_ops: 0.10

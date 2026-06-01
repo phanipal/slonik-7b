@@ -1,0 +1,66 @@
+model:
+  sft_checkpoint: checkpoints/sft-merged
+  max_seq_length: 3072
+  load_in_4bit: true
+  dtype: bfloat16
+  fast_inference: false
+  max_lora_rank: 32
+  gpu_memory_utilization: 0.45
+
+lora:
+  r: 32
+  alpha: 64
+  dropout: 0.0
+  target_modules:
+    - q_proj
+    - k_proj
+    - v_proj
+    - o_proj
+    - gate_proj
+    - up_proj
+    - down_proj
+  use_gradient_checkpointing: unsloth
+
+data:
+  prompts_path: data/processed/grpo_prompts.jsonl
+  databases_root: data/raw/bird/train_databases/train/train_databases
+  num_proc: 2
+
+generation:
+  num_generations: 4
+  temperature: 1.0
+  top_p: 0.95
+  top_k: 50
+  max_new_tokens: 512
+  min_new_tokens: 8
+  repetition_penalty: 1.05
+
+rewards:
+  exec_match_weight: 1.0
+  syntax_valid_weight: 0.2
+  format_correct_weight: 0.1
+  timeout_seconds: 5
+  dialect: postgresql
+
+training:
+  output_dir: checkpoints/grpo
+  num_train_epochs: 1
+  per_device_train_batch_size: 1
+  gradient_accumulation_steps: 4
+  learning_rate: 5.0e-6
+  beta: 0.04
+  warmup_ratio: 0.05
+  weight_decay: 0.01
+  lr_scheduler_type: constant_with_warmup
+  optim: adamw_8bit
+  max_grad_norm: 0.3
+  max_steps: 2000
+  save_total_limit: 5
+  logging_steps: 1
+  save_strategy: steps
+  save_steps: 100
+  save_total_limit: 3
+  bf16: true
+  seed: 3407
+  report_to: wandb
+  run_name: slonik-7b-grpo-g4
